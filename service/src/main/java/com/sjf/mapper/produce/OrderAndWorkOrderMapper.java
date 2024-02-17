@@ -1,7 +1,6 @@
 package com.sjf.mapper.produce;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.sjf.entity.produce.Order;
 import com.sjf.entity.produce.OrderAndWorkOrder;
 import com.sjf.entity.produce.WorkOrder;
 import org.apache.ibatis.annotations.Param;

@@ -5,7 +5,6 @@ import com.sjf.entity.base.RepairRecord;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.Resource;
 
 /**
  * @Description: 维修记录 Mapper 接口
