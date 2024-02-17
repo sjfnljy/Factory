@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjf.mapper.admin.MenuMapper">
+
+    <resultMap id="menuResultMap" type="com.sjf.entity.admin.Menu">
+        <id property="id" column="id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="component" column="component"/>
+        <result property="perms" column="perms"/>
+        <result property="sortValue" column="sort_value"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDeleted" column="is_deleted"/>
+    </resultMap>
+
+    <!-- 获取所有菜单的详细信息-->
+    <select id="getAllMenu" resultMap="menuResultMap">
+        select * from `tb_admin_menu` where is_deleted = 0 and status = 0
+            order by sort_value
+    </select>
+
+    <!-- 根据用户 id 获取菜单的详细信息-->
+    <select id="getMenuListByUserId" resultMap="menuResultMap">
+        select * from `tb_admin_menu` m
+        inner join `tb_role_menu` rm on rm.menu_id = m.id
+        inner join `tb_user_role` ur on ur.role_id = rm.role_id
+        where
+        ur.user_id = #{user_id}
+        and m.status = 0
+        and rm.is_deleted = 0
+        and ur.is_deleted = 0
+        and m.is_deleted = 0
+    </select>
+
+    <!-- 插入菜单详细信息-->
+    <insert id="insertMenu" parameterType="com.sjf.entity.admin.Menu" useGeneratedKeys="true" keyProperty="id">
+        insert into `tb_admin_menu`
+            (parent_id, name, type, component, perms, sort_value, status)
+        values
+            (#{parentId}, #{name}, #{type}, #{component}, #{perms}, #{sortValue}, #{status})
+    </insert>
+
+    <!-- 根据菜单 id 获取菜单的详细信息-->
+    <select id="getMenuById" resultMap="menuResultMap">
+        select * from `tb_admin_menu` where id = #{menu_id} and status = 0 and is_deleted = 0
+    </select>
+
+    <!-- 根据菜单 id 获取该菜单的子菜单 id 集合-->
+    <select id="getChildrenId" resultType="java.lang.Long">
+        select id from tb_admin_menu where parent_id = #{menu_id} and status = 0 and is_deleted = 0
+    </select>
+
+    <select id="getAllRouter" resultMap="menuResultMap">
+        select * from `tb_admin_menu` where is_deleted = 0 and status = 0 and type IN (0, 1)
+        order by sort_value
+    </select>
+
+    <select id="getRouterListByUserId" resultMap="menuResultMap">
+        select * from `tb_admin_menu` m
+                          inner join `tb_role_menu` rm on rm.menu_id = m.id
+                          inner join `tb_user_role` ur on ur.role_id = rm.role_id
+        where
+            ur.user_id = #{user_id}
+            and m.status = 0
+            and rm.is_deleted = 0
+            and ur.is_deleted = 0
+            and m.is_deleted = 0
+            and m.type IN (0, 1)
+    </select>
+
+    <!-- 更新菜单的详细信息-->
+    <update id="updateMenu" parameterType="com.sjf.entity.admin.Menu">
+        update `tb_admin_menu`
+        <set>
+            <if test="parentId != null">
+                parent_id = #{parentId},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="type == 0 or type == 1 or type == 2">
+                type = #{type},
+            </if>
+            <if test="component != null">
+                component = #{component},
+            </if>
+            <if test="perms != null">
+                perms = #{perms},
+            </if>
+            <if test="sortValue != null">
+                sort_value = #{sortValue},
+            </if>
+            <if test="status == 0 or status == 1">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 删除菜单的详细信息-->
+    <delete id="deleteMenu">
+        update `tb_admin_menu` set is_deleted = 1 where id = #{menu_id}
+    </delete>
+
+</mapper>

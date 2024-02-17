@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjf.mapper.produce.WorkOrderAndProductMapper">
+
+    <!-- 根据工单 id 删除工单产品信息-->
+    <delete id="deleteWorkOrderAndProduct">
+        update `tb_produce_work_product` set is_deleted = 1 where work_order_id = #{work_order_id}
+    </delete>
+
+    <!-- 根据产品 id 查询产品所属工单 id 集合信息-->
+    <select id="getWorkIdByProductId" resultType="java.lang.Long">
+        select work_order_id from `tb_produce_work_product` where product_id = #{product_id} and is_deleted = 0
+    </select>
+
+</mapper>

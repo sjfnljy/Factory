@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjf.mapper.admin.UserAndRoleMapper">
+
+    <resultMap id="userAndRoleResultMap" type="com.sjf.entity.admin.UserAndRole">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="roleId" column="role_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDeleted" column="is_deleted"/>
+    </resultMap>
+
+    <resultMap id="roleResultMap" type="com.sjf.entity.admin.Role">
+        <id property="id" column="id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="roleCode" column="role_code"/>
+        <result property="description" column="description"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDeleted" column="is_deleted"/>
+    </resultMap>
+
+    <!-- 根据角色 id 获取该角色所属的用户 id -->
+    <select id="getUserIdByRoleId" resultType="java.lang.Integer">
+        select user_id from `tb_user_role` where role_id = #{role_id} and is_deleted = 0
+    </select>
+
+    <!-- 根据用户 id 获取用户对应的角色的详细信息 -->
+    <select id="getRoleByUserId" resultMap="roleResultMap">
+        select * from `tb_admin_role` where id = (
+            select role_id from tb_user_role where user_id = #{user_id} and tb_user_role.is_deleted = 0
+        ) and is_deleted = 0
+    </select>
+
+    <!-- 根据用户 id 获取用户对应的角色 id -->
+    <select id="getRoleIdByUserId" resultType="java.lang.Long">
+        select role_id from `tb_user_role` where user_id = #{user_id} and is_deleted = 0
+    </select>
+
+    <!-- 根据用户 id 删除用户角色中间表记录 -->
+    <delete id="deleteUserRoleByUserId">
+        update  `tb_user_role` set is_deleted = 1 where user_id = #{user_id}
+    </delete>
+
+    <!-- 根据用户 id 和角色 id 创建用户角色中间表记录 -->
+    <insert id="insertUserRole" useGeneratedKeys="true" keyProperty="id" parameterType="com.sjf.entity.admin.UserAndRole">
+        insert into `tb_user_role` (id, user_id, role_id) values (#{id}, #{userId}, #{roleId})
+    </insert>
+
+</mapper>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.sjf.mapper.base.DeviceAndRepairMapper">
+
+    <!-- 根据设备 id 查询设备所有维修记录的 id-->
+    <select id="getRepairRecordIdsByDeviceId" resultType="java.lang.Long">
+        select repair_id from `tb_base_device_repair` where device_id = #{device_id}
+    </select>
+
+    <!-- 根据设备 id 查询设备所有维修记录的详细信息-->
+    <select id="getRepairRecordByDeviceId" resultMap="com.sjf.mapper.base.RepairRecordMapper.repairRecordResultMap">
+        select * from `tb_base_repair_record` where id IN (
+            select repair_id from `tb_base_device_repair` where device_id = #{device_id} and is_deleted = 0
+        )
+    </select>
+
+    <!-- 根据设备 id 删除设备所有维修记录-->
+    <delete id="deleteDeviceAndRepairByDeviceId">
+        update `tb_base_device_repair` set is_deleted = 1 where device_id = #{device_id}
+    </delete>
+
+
+</mapper>

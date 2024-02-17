@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjf.mapper.produce.TaskAndProcessMapper">
+
+    <!-- 根据任务 id 删除任务工序信息-->
+    <delete id="deleteTaskProcessByTaskId">
+        update `tb_produce_task_process` set is_deleted = 1 where task_id = #{task_id}
+    </delete>
+
+    <!-- 根据工序 id 查询工序所属任务集合信息-->
+    <select id="getTaskIdByProcessId" resultType="java.lang.Long">
+        select task_id from `tb_produce_task_process` where process_id = #{process_id} and is_deleted = 0
+    </select>
+</mapper>

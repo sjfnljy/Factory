@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjf.mapper.base.RepairRecordMapper">
+
+    <sql id="repairRecordColumns">
+        id, repair_code, fault_cause, repair_person_name, repair_person_phone, repair_cost, repair_result, create_time, update_time
+    </sql>
+
+    <resultMap id="repairRecordResultMap" type="com.sjf.entity.base.RepairRecord">
+        <id property="id" column="id"/>
+        <result property="faultCause" column="fault_cause"/>
+        <result property="repairPersonName" column="repair_person_name"/>
+        <result property="repairCost" column="repair_cost"/>
+        <result property="repairPersonPhone" column="repair_person_phone"/>
+        <result property="repairResult" column="repair_result"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDeleted" column="is_deleted"/>
+    </resultMap>
+
+    <!-- 根据维修记录编号查询维修记录详细信息-->
+    <select id="getRepairRecordByCode" resultMap="repairRecordResultMap">
+        select <include refid="repairRecordColumns"/> from `tb_base_repair_record` where repair_code = #{repair_code} and is_deleted = 0
+    </select>
+
+    <!-- 根据维修记录 id 查询维修记录详细信息-->
+    <select id="getRepairRecordById" resultMap="repairRecordResultMap">
+        select <include refid="repairRecordColumns"/> from `tb_base_repair_record` where id = #{repair_id} and is_deleted = 0
+    </select>
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjf.mapper.base.DeviceMapper">
+
+    <sql id="deviceColumns">
+        id, device_name, device_code, manufacturer, status, create_time, update_time
+    </sql>
+
+    <resultMap id="deviceResultMap" type="com.sjf.entity.base.Device">
+        <id property="id" column="id"/>
+        <result property="deviceName" column="device_name"/>
+        <result property="deviceCode" column="device_code"/>
+        <result property="manufacturer" column="manufacturer"/>
+        <result property="deviceStatus" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDeleted" column="is_deleted"/>
+    </resultMap>
+
+    <!-- 根据设备 id 查询设备详细信息-->
+    <select id="getDeviceByDeviceId" resultMap="deviceResultMap">
+        select <include refid="deviceColumns"/> from `tb_base_device` where id = #{device_id} and is_deleted = 0
+    </select>
+
+    <!-- 根据设备名称查询设备详细信息-->
+    <select id="getDeviceByDeviceName" resultMap="deviceResultMap">
+        select <include refid="deviceColumns"/> from `tb_base_device` where device_name = #{device_name} and is_deleted = 0
+    </select>
+
+    <!-- 根据设备编号查询设备详细信息-->
+    <select id="getDeviceByDeviceCode" resultMap="deviceResultMap">
+        select <include refid="deviceColumns"/> from `tb_base_device` where device_code = #{device_code} and is_deleted = 0
+    </select>
+
+    <!-- 根据设备 id 删除设备详细信息-->
+    <delete id="deleteDevice">
+        update `tb_base_device` set is_deleted = 1 where id = #{device_id}
+    </delete>
+
+
+</mapper>

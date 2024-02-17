@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjf.mapper.base.ProcessRouterMapper">
+
+    <sql id="routerColumns"> id, router_code, router_name</sql>
+
+    <resultMap id="routerResultMap" type="com.sjf.entity.base.ProcessRouter">
+        <id property="id" column="id"/>
+        <result property="routerName" column="router_name"/>
+        <result property="routerCode" column="router_code"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDeleted" column="is_deleted"/>
+    </resultMap>
+
+    <!-- 根据工艺路线 id 获取工艺路线信息-->
+    <select id="getRouterById" resultMap="routerResultMap">
+        select <include refid="routerColumns"/> from `tb_base_process_router` where id = #{router_id} and is_deleted = 0
+    </select>
+
+    <!-- 根据工艺路线编码获取工艺路线信息-->
+    <select id="getRouterByRouterCode" resultMap="routerResultMap">
+        select <include refid="routerColumns"/> from `tb_base_process_router` where router_code = #{router_code} and is_deleted = 0
+    </select>
+
+    <!-- 根据工艺路线 id 删除工艺路线信息-->
+    <delete id="deleteRouterById">
+        update 'tb_base_process_router' set is_deleted = 1 where id = #{router_id}
+    </delete>
+</mapper>

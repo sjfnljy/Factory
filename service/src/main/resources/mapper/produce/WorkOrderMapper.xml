@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjf.mapper.produce.WorkOrderMapper">
+
+    <sql id="workOrderColumns"> id, worker_order_code, `status`, priority, planned_number, completed_number, planned_begin_time,
+        planned_end_time, really_begin_time, really_end_time, report_time, create_time, update_time
+    </sql>
+
+    <resultMap id="workOrderResultMap" type="com.sjf.entity.produce.WorkOrder">
+        <id property="id" column="id"/>
+        <result property="workOrderCode" column="work_order_code"/>
+        <result property="status" column="status"/>
+        <result property="priority" column="priority"/>
+        <result property="plannedNumber" column="planned_number"/>
+        <result property="completedNumber" column="completed_number"/>
+        <result property="plannedBeginTime" column="planned_begin_time"/>
+        <result property="plannedEndTime" column="planned_end_time"/>
+        <result property="reallyBeginTime" column="really_end_time"/>
+        <result property="reallyEndTime" column="really_end_time"/>
+        <result property="reportTime" column="report_time"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDeleted" column="is_deleted"/>
+    </resultMap>
+
+    <!-- 根据工单 id 查询工单详细信息-->
+    <select id="getWorkOrderById" resultMap="workOrderResultMap">
+        select <include refid="workOrderColumns"/> from `tb_produce_work_order` where id = #{work_order_id} and is_deleted = 0
+    </select>
+
+    <!-- 根据工单编号查询工单详细信息-->
+    <select id="getWorkOrderByCode" resultMap="workOrderResultMap">
+        select <include refid="workOrderColumns"/> from `tb_produce_work_order` where work_order_code = #{work_order_code} and is_deleted = 0
+    </select>
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjf.mapper.base.ProcessAndDefectMapper">
+
+    <!-- 根据不良品项 id 查询对应的工序 id 集合-->
+    <select id="getProcessIdByDefectId" resultType="java.lang.Long">
+        select process_id from `tb_base_process_defect` where defect_id = #{defect_id} and is_deleted = 0
+    </select>
+
+    <!-- 根据工序 id 查询对应的不良品项 id 集合-->
+    <select id="getDefectIdsByProcessId" resultType="java.lang.Long">
+        select defect_id from `tb_base_process_defect` where process_id = #{process_id} and is_deleted = 0
+    </select>
+
+    <!-- 根据工序 id 查询对应的不良品项详细信息集合-->
+    <select id="getDefectByProcessId" resultMap="com.sjf.mapper.base.DefectMapper.defectResultMap">
+        select <include refid="com.sjf.mapper.base.DefectMapper.defectColumns"/> from `tb_base_defect`
+            where id IN ( select defect_id from `tb_base_process_defect` where process_id = #{process_id} and is_deleted = 0)
+            and is_deleted = 0
+    </select>
+
+    <!-- 根据工序 id 删除对应的工序不良品项信息-->
+    <delete id="deleteByProcessId">
+        update `tb_base_process_defect` set is_deleted = 1 where process_id = #{process_id}
+    </delete>
+
+
+</mapper>

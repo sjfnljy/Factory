@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjf.mapper.base.ProductMapper">
+    <sql id="productColumns">id, product_name, product_code, product_size, product_type, product_min_number,
+        product_max_number, stock_number, product_unit</sql>
+
+    <resultMap id="productResultMap" type="com.sjf.entity.base.Product">
+        <id property="id" column="id"/>
+        <result property="productCode" column="product_code"/>
+        <result property="productName" column="product_name"/>
+        <result property="productSize" column="product_size"/>
+        <result property="productType" column="product_type"/>
+        <result property="productMinNumber" column="product_min_number"/>
+        <result property="productMaxNumber" column="product_max_number"/>
+        <result property="stockNumber" column="stock_number"/>
+        <result property="productUnit" column="product_unit"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDeleted" column="is_deleted"/>
+    </resultMap>
+
+    <!-- 根据产品编号获取产品信息-->
+    <select id="getProductByCode" resultMap="productResultMap">
+        select <include refid="productColumns"/> from `tb_base_product` where product_code = #{product_code} and is_deleted = 0
+    </select>
+
+    <!-- 根据产品 id 获取产品信息-->
+    <select id="getProductById" resultMap="productResultMap">
+        select <include refid="productColumns"/> from `tb_base_product` where id = #{product_id} and is_deleted = 0
+    </select>
+</mapper>

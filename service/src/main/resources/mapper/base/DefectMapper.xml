@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjf.mapper.base.DefectMapper">
+
+    <sql id="defectColumns">id, defect_code, defect_name, quantity, defect_cause, create_time, update_time</sql>
+
+    <resultMap id="defectResultMap" type="com.sjf.entity.base.Defect">
+        <id property="id" column="id"/>
+        <result property="defectCode" column="defect_code"/>
+        <result property="defectName" column="defect_name"/>
+        <result property="quantity" column="quantity"/>
+        <result property="defectCause" column="defect_cause"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDeleted" column="is_deleted"/>
+    </resultMap>
+
+    <!-- 根据不良品项 id 查询不良品项-->
+    <select id="getDefectById" resultMap="defectResultMap">
+        select <include refid="defectColumns"/> from `tb_base_defect` where id = #{defect_id} and is_deleted = 0
+    </select>
+
+    <!-- 根据不良品项名称查询不良品项-->
+    <select id="getDefectByName" resultMap="defectResultMap">
+        select <include refid="defectColumns"/> from `tb_base_defect` where defect_name = #{defect_name} and is_deleted = 0
+    </select>
+
+    <!-- 根据不良品项编号查询不良品项-->
+    <select id="getDefectByCode" resultMap="defectResultMap">
+        select <include refid="defectColumns"/> from `tb_base_defect` where defect_code = #{defect_code} and is_deleted = 0
+    </select>
+
+
+    <update id="updateDefect" parameterType="com.sjf.entity.base.Defect">
+        update `tb_base_defect`
+            <set>
+                <if test="defectCode != null">
+                    defect_code = #{defectCode},
+                </if>
+                <if test="defectName != null">
+                    defect_name = #{defectName},
+                </if>
+                <if test="quantity != null and quantity >= 0">
+                    quantity = #{quantity},
+                </if>
+                <if test="defectCause != null">
+                    defect_cause = #{defectCause},
+                </if>
+            </set>
+        where id = #{id} and is_deleted = 0
+    </update>
+
+    <delete id="deleteDefect">
+        update `tb_base_defect` set is_deleted = 1 where id = #{defect_id}
+    </delete>
+
+
+</mapper>

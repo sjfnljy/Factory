@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjf.mapper.base.ProcessMapper">
+
+    <sql id="processColumns">id, process_name, process_code, process_ratio, status, create_time, update_time</sql>
+
+    <resultMap id="processResultMap" type="com.sjf.entity.base.Process">
+        <id property="id" column="id"/>
+        <result property="processName" column="process_name"/>
+        <result property="processCode" column="process_code"/>
+        <result property="processRatio" column="process_ratio"/>
+        <result property="processStatus" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDeleted" column="is_deleted"/>
+    </resultMap>
+
+    <!-- 根据工序 id 获取工序信息-->
+    <select id="getProcessById" resultMap="processResultMap">
+        select <include refid="processColumns"/> from `tb_base_process` where id = #{process_id} and is_deleted = 0
+    </select>
+
+    <!-- 根据工序编号获取工序信息-->
+    <select id="getProcessByCode" resultMap="processResultMap">
+        select <include refid="processColumns"/> from `tb_base_process` where process_code = #{process_code} and is_deleted = 0
+    </select>
+
+    <!-- 根据工序 id 修改工序状态信息-->
+    <update id="updateProcessStatus">
+        update `tb_base_process` set status = #{status} where id = #{process_id} and is_deleted = 0
+    </update>
+
+    <!-- 根据工序 id 删除工序信息-->
+    <delete id="deleteProcess">
+        update `tb_base_process` set is_deleted = 1 where id = #{process_id}
+    </delete>
+
+</mapper>
